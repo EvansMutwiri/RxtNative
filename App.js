@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import LotsOfGreetings from './LottaGreetings';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {Provider} from 'react-redux';
+import {store} from './src/store';
 
 const styles = StyleSheet.create({
   arrange: {
@@ -31,8 +32,7 @@ class App extends Component {
   };
   render() {
     return (
-      <>
-        <LotsOfGreetings />
+      <Provider store={store}>
         <View style={styles.arrange}>
           <TouchableOpacity style={styles.button} onPress={this.onPress}>
             <Text>CLICK</Text>
@@ -41,7 +41,7 @@ class App extends Component {
             <Text style={styles.txt}>You clicked {this.state.count} times</Text>
           </View>
         </View>
-      </>
+      </Provider>
     );
   }
 }

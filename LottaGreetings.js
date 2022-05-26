@@ -1,5 +1,8 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Button} from 'react-native';
+import {increment, decrement} from './src/redux/counterSlice';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import {store} from './src/store';
 
 const styles = StyleSheet.create({
   fill: {
@@ -16,22 +19,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const Greeting = props => {
-  return (
-    <View style={[styles.center]}>
-      <Text style={styles.txt}>{props.name}</Text>
-    </View>
-  );
-};
-
 const LotsOfGreetings = () => {
+  const count = useSelector(state => state.counter.count);
+  const dispatch = useDispatch();
   return (
-    <View style={styles.fill}>
-      <View style={[styles.center, {top: 100}]}>
-        <Greeting name="React" />
-        <Greeting name="Native" />
-      </View>
-    </View>
+    <Provider store={store}>
+      <Text> {count}</Text>
+      <Button title="Increment" onPress={() => dispatch(increment())} />
+      <Button title="Decrement" onPress={() => dispatch(decrement())} />
+    </Provider>
   );
 };
 

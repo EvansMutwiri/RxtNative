@@ -2,40 +2,53 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {Navigation} from 'react-native-navigation';
-import LotsOfGreetings from './LottaGreetings';
+import {Provider} from 'react-redux';
+import {store} from './src/store';
+import App from './App';
+import {useSelector, useDispatch} from 'react-redux';
+import {increment, decrement} from './src/redux/counterSlice';
+
+const Count = () => {
+  const count = useSelector(state => state.counter.count);
+  const dispatch = useDispatch();
+  return (
+    <>
+      <Text style={styles.txt}> {count}</Text>
+      <Button title="Increment" onPress={() => dispatch(increment())} />
+      <Button title="Decrement" onPress={() => dispatch(decrement())} />
+    </>
+  );
+};
 
 const HomeScreen = props => {
   return (
-    <>
+    <Provider store={store}>
+      <Text style={styles.txt}>Home page</Text>
       <View style={styles.root}>
-        <Text style={styles.txt}>Home page</Text>
+        <Count />
       </View>
-      <Button
-        style={styles.button}
-        onPress={() =>
-          Navigation.push(props.componentId, {
-            component: {
-              name: 'Details',
-              options: {
-                topBar: {
-                  title: {
-                    text: 'Posts',
-                    color: 'white',
-                  },
-                  rightButtons: [
-                    {
-                      id: 'addPost',
-                      text: 'Add',
+      <View style={'marginBottom: 20'}>
+        <Button
+          style={styles.button}
+          onPress={() =>
+            Navigation.push(props.componentId, {
+              component: {
+                name: 'Details',
+                options: {
+                  topBar: {
+                    title: {
+                      text: 'Posts',
+                      color: 'white',
                     },
-                  ],
+                  },
                 },
               },
-            },
-          })
-        }
-        title="More..."
-      />
-    </>
+            })
+          }
+          title="More..."
+        />
+      </View>
+    </Provider>
   );
 };
 
@@ -48,7 +61,7 @@ HomeScreen.options = {
 };
 
 Navigation.registerComponent('Home', () => HomeScreen);
-Navigation.registerComponent('Details', () => LotsOfGreetings);
+Navigation.registerComponent('Details', () => App);
 
 Navigation.events().registerAppLaunchedListener(async () => {
   Navigation.setRoot({
@@ -98,12 +111,14 @@ const styles = StyleSheet.create({
   },
   txt: {
     color: '#51707d',
+    backgroundColor: '#e8f8ff',
     fontSize: 20,
+    textAlign: 'center',
+    paddingVertical: 20,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#81C3D7',
-    padding: 10,
-    marginBottom: 10,
+    marginVertical: 10,
   },
 });
